@@ -19,13 +19,17 @@ public class DashboardDao {
     }
 
 
-    private static Map<Long, String> loadItems(Connection connection, String query, String id, String name) throws SQLException {
+    private static Map<String, String> loadItems(Connection connection, String query, String id, String name, boolean keyIsString) throws SQLException {
         try (Statement stmt = connection.createStatement()) {
             System.out.println("Loading " + query);
             ResultSet rs = stmt.executeQuery(query);
-            Map<Long, String> items = new HashMap<>();
+            Map<String, String> items = new HashMap<>();
             while (rs.next()) {
-                items.put(rs.getLong(id), rs.getString(name));
+                if (keyIsString) {
+                    items.put(rs.getString(id), rs.getString(name));
+                } else {
+                    items.put(String.valueOf(rs.getLong(id)), rs.getString(name));
+                }
             }
             System.out.println("Loaded " + items.size());
             return items;
@@ -36,13 +40,13 @@ public class DashboardDao {
     public static Dictionary loadDictionary() {
         try (Connection conn = getConnection()) {
             return new Dictionary(
-                    loadItems(conn, "select id, name from line_items", "id", "name"),
-                    loadItems(conn, "select id, name from campaigns", "id", "name"),
-                    loadItems(conn, "select id, name from apps", "id", "name"),
-                    loadItems(conn, "select id, name from creatives", "id", "name"),
-                    loadItems(conn, "select iso2, name from countries", "iso2", "name"),
-                    loadItems(conn, "select id, description from content_categories", "id", "description"),
-                    loadItems(conn, "select id, name from genres", "id", "name")
+                    loadItems(conn, "select id, name from line_items", "id", "name", false),
+                    loadItems(conn, "select id, name from campaigns", "id", "name", false),
+                    loadItems(conn, "select id, name from apps", "id", "name", false),
+                    loadItems(conn, "select id, name from creatives", "id", "name", false),
+                    loadItems(conn, "select iso2, name from countries", "iso2", "name", true),
+                    loadItems(conn, "select id, description from content_categories", "id", "description", false),
+                    loadItems(conn, "select id, name from genres", "id", "name", false)
             );
         } catch (SQLException e) {
             throw new RuntimeException(e);

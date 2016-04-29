@@ -10,15 +10,29 @@ import java.io.IOException;
 @WebServlet(urlPatterns = {"/report"}, loadOnStartup = 1)
 public class ReportingServlet extends HttpServlet {
 
+    private Dictionary dictionary;
+
     @Override
     public void init() throws ServletException {
-        Dictionary dictionary = DashboardDao.loadDictionary();
+        dictionary = DashboardDao.loadDictionary();
     }
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("test");
+        resp.setHeader("Content-type", "text/plain; charset=UTF-8");
+        dictionary
+                .getApps()
+                .entrySet()
+                .stream()
+                .map(e -> e.getKey() + " : " + e.getValue() + "\n")
+                .forEach(e -> {
+                    try {
+                        resp.getWriter().write(e);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
     }
 
 
