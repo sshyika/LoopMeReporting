@@ -6,7 +6,10 @@
 		<title>Reporting</title>
 		
 		<style type="text/css">
-			
+			* {
+				font-family: sans-serif;
+				font-size: 9pt;
+			}
 		</style>
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
@@ -25,12 +28,23 @@
 						dataSrc: ''
 					},
 					columns: [
-						{ data: 'name' },
-						{ data: 'position' },
-						{ data: 'salary' },
-						{ data: 'start_date' },
-						{ data: 'office' },
-						{ data: 'extn' }
+						{ data: 'ad_clicks' },
+						{ data: 'bid_wins' },
+						{ data: 'earnings_cents' },
+						{ data: 'video_starts' },
+						{ data: 'b_video_completes' },
+						{ data: 'tracking' },
+						{ data: 'app_price_cents' },
+						{ data: 'ad_viewable' },
+						{ data: 'app_confirmed_installs' },
+						{ data: 'ad_success' },
+						{ data: 'inbox_opens' },
+						{ data: 'a_price_cents' },
+						{ data: 'video_completes' },
+						{ data: 'campaign_id' },
+						{ data: 'b_clicks' },
+						{ data: 'b_views' },
+						{ data: 'ad_views' }
 					]
 				});
 			} );
@@ -41,12 +55,23 @@
 	<table id="table_id" class="display">
 		<thead>
 			<tr>
-				<th>name</th>
-				<th>position</th>
-				<th>salary</th>
-				<th>start_date</th>
-				<th>office</th>
-				<th>extn</th>
+				<th>Ad Clicks</th>
+				<th>Bid Wins</th>
+				<th>Earnings Cents</th>
+				<th>Video Starts</th>
+				<th>B Video Completes</th>
+				<th>Tracking</th>
+				<th>App Price Cents</th>
+				<th>Ad Viewable</th>
+				<th>App Confirmed Installs</th>
+				<th>Ad Success</th>
+				<th>Inbox Opens</th>
+				<th>A Price Cents</th>
+				<th>Video Completes</th>
+				<th>Group</th>
+				<th>B Clicks</th>
+				<th>B Views</th>
+				<th>Ad Views</th>
 			</tr>
 		</thead>
 		<tbody>
