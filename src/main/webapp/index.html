@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+
+		<title>Reporting</title>
+		
+		<style type="text/css">
+			
+		</style>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.11/css/jquery.dataTables.css">
+  
+		<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>		
+		
+		<script type="text/javascript">
+			$.fn.dataTable.ext.errMode = 'throw';
+			$(document).ready( function () {
+				$('#table_id').DataTable({
+					searching: false,
+					ajax: {
+						url: '/api/report',
+						dataSrc: ''
+					},
+					columns: [
+						{ data: 'name' },
+						{ data: 'position' },
+						{ data: 'salary' },
+						{ data: 'start_date' },
+						{ data: 'office' },
+						{ data: 'extn' }
+					]
+				});
+			} );
+		</script>
+	</head>
+	<body>
+	
+	<table id="table_id" class="display">
+		<thead>
+			<tr>
+				<th>name</th>
+				<th>position</th>
+				<th>salary</th>
+				<th>start_date</th>
+				<th>office</th>
+				<th>extn</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>	
+	
+	</body>
+</html>
