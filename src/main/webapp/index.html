@@ -20,12 +20,13 @@
 
 		<script type="text/javascript">
 			$.fn.dataTable.ext.errMode = 'throw';
+			var dataTable;
 
-			function showReport() {
-				$('#table_id').DataTable({
+			function showReport(url) {
+				return $('#table_id').DataTable({
 					searching: false,
 					ajax: {
-						url: '/api/report',
+						url: url,
 						dataSrc: 'data'
 					},
 					columns: [
@@ -50,36 +51,77 @@
 				});
 			}
 
-			$(document).ready(showReport);
+			function loadItems(listId, url) {
+				$.ajax({
+					url: url,
+					context: document.body
+				}).done(function(data) {
+					$.each(data, function(key, value) {
+						$('#' + listId).append($('<option>', { value : key }).text(value));
+					});
+				});
+			}
+
+			function refreshTable() {
+				dataTable.ajax.url("/api/report?" + "groupBy=" + document.getElementById("group_by").value);
+				dataTable.ajax.reload(null, false);
+			}
+
+			$(document).ready(function() {
+				dataTable = showReport("/api/report");
+				loadItems("line_item", "/api/dict/lineitems");
+			});
 		</script>
 	</head>
 	<body>
-	
-	<table id="table_id" class="display">
-		<thead>
-			<tr>
-				<th>Group</th>
-				<th>Ad Clicks</th>
-				<th>Ad Views</th>
-				<th>Ad Success</th>
-				<th>Bid Wins</th>
-				<th>Earnings Cents</th>
-				<th>Video Starts</th>
-				<th>B Video Completes</th>
-				<th>Tracking</th>
-				<th>App Price Cents</th>
-				<th>Ad Viewable</th>
-				<th>App Confirmed Installs</th>
-				<th>Inbox Opens</th>
-				<th>A Price Cents</th>
-				<th>Video Completes</th>
-				<th>B Clicks</th>
-				<th>B Views</th>
-			</tr>
-		</thead>
-		<tbody>
-		</tbody>
-	</table>	
+
+		<br/><br/>
+
+		Line Item:
+		<select id="line_item" onchange="alert('asd');">
+			<option value="">--</option>
+		</select>
+
+		Group By:
+		<select id="group_by" onchange="refreshTable();">
+			<option value="line_item_id">Line Item</option>
+			<option value="campaign_id">Campaign</option>
+			<option value="app_id">App</option>
+			<option value="creative_id">Creative</option>
+			<option value="country_id">Country</option>
+			<option value="app_category_id">App Category</option>
+			<option value="genre_id">Genre</option>
+		</select>
+
+		<br/><br/>
+		<hr/>
+		<br/><br/>
+
+		<table id="table_id" class="display">
+			<thead>
+				<tr>
+					<th>Group</th>
+					<th>Ad Clicks</th>
+					<th>Ad Views</th>
+					<th>Ad Success</th>
+					<th>Bid Wins</th>
+					<th>Earnings Cents</th>
+					<th>Video Starts</th>
+					<th>B Video Completes</th>
+					<th>Tracking</th>
+					<th>App Price Cents</th>
+					<th>Ad Viewable</th>
+					<th>App Confirmed Installs</th>
+					<th>Inbox Opens</th>
+					<th>A Price Cents</th>
+					<th>Video Completes</th>
+					<th>B Clicks</th>
+					<th>B Views</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
 	
 	</body>
 </html>

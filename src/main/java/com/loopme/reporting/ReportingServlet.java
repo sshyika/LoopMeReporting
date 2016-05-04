@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = {"/api/*"}, loadOnStartup = 1)
 public class ReportingServlet extends HttpServlet {
@@ -29,11 +30,22 @@ public class ReportingServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setHeader("Content-type", "text/plain; charset=UTF-8");
+        resp.setHeader("Content-type", "application/json; charset=UTF-8");
         String content = "";
         switch (req.getPathInfo()) {
             case "/report" :
                 content = getReport(req);
+                break;
+            case "/dict/lineitems" :
+                content = "{" +
+                        dictionary.getMaps()
+                        .get(Dictionary.Group.LINE)
+                        .entrySet().stream()
+                        .limit(100)
+                        .map(e -> String.format("\"%1$s\" : \"%2$s\"", e.getKey(), e.getValue()))
+                        .collect(Collectors.joining(","))
+
+                + "}";
                 break;
         }
         resp.getWriter().write(content);
@@ -41,8 +53,10 @@ public class ReportingServlet extends HttpServlet {
 
 
     private String getReport(HttpServletRequest req) {
-        String content = DruidConnector.getReport();
-        return Converter.convertTopN(Dictionary.Group.APP, content, dictionary);
+        String groupBy = req.getParameter("groupBy");
+        Dictionary.Group group = Dictionary.Group.parse(groupBy);
+        String content = DruidConnector.getReport(group.field());
+        return Converter.convertTopN(group, content, dictionary);
     }
 
 

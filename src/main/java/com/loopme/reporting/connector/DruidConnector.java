@@ -5,16 +5,16 @@ import javax.ws.rs.core.Response;
 
 public class DruidConnector {
 
-    public static String getReport() {
+    public static String getReport(String groupBy) {
         Response response = TransportManager.getClient()
                 .target("http://136.243.171.177:8082/druid/v2")
                 .request()
                 .post(Entity.json("{\n" +
                         "  \"queryType\": \"topN\",\n" +
                         "  \"dataSource\": \"apps\",\n" +
-                        "  \"threshold\": 500,\n" +
+                        "  \"threshold\": 50000,\n" +
                         "  \"granularity\": \"all\",\n" +
-                        "  \"dimension\": \"app_id\",\n" +
+                        "  \"dimension\": \"" + groupBy + "\",\n" +
                         "  \"metric\": \"ad_clicks\",\n" +
                         "  \"aggregations\": [\n" +
                         "    { \"type\": \"longSum\", \"name\": \"ad_clicks\", \"fieldName\": \"ad_clicks\" },\n" +

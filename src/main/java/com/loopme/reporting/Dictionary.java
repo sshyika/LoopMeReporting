@@ -24,6 +24,15 @@ public class Dictionary {
         public String field() {
             return field;
         }
+
+        public static Group parse(String field) {
+            for (Group group : Group.values()) {
+                if (group.field().equals(field)) {
+                    return group;
+                }
+            }
+            return Group.CAMPAIGN;
+        }
     }
 
     private Map<Group, Map<String, String>> maps;
