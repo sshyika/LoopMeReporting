@@ -12,6 +12,11 @@ public class Converter {
 
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for (JsonObject result : results.getValuesAs(JsonObject.class)) {
+            String groupValue = "";
+            if (result.get(group.field()).getValueType() != JsonValue.ValueType.NULL) {
+                groupValue = dict.getMaps().get(group).get(result.getString(group.field()));
+            }
+            groupValue = groupValue == null ? "" : groupValue;
             arrayBuilder.add(
                 Json.createObjectBuilder()
                 .add("ad_clicks", result.getJsonNumber("ad_clicks"))
@@ -31,7 +36,7 @@ public class Converter {
                 .add("b_clicks", result.getJsonNumber("b_clicks"))
                 .add("b_views", result.getJsonNumber("b_views"))
                 .add("ad_views", result.getJsonNumber("ad_views"))
-                .add("group", dict.getMaps().get(group).get(result.getString(group.field())))
+                .add("group", groupValue)
             );
         }
         builder.add("data", arrayBuilder);
