@@ -1,56 +1,50 @@
 package com.loopme.reporting;
 
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class Dictionary {
-    private Map<String, String> lineItems;
-    private Map<String, String> campaigns;
-    private Map<String, String> apps;
-    private Map<String, String> creatives;
-    private Map<String, String> countries;
-    private Map<String, String> categories;
-    private Map<String, String> genres;
+
+    public static enum Group {
+        LINE("line_item_id"),
+        CAMPAIGN("campaign_id"),
+        APP("app_id"),
+        CREATIVE("creative_id"),
+        COUNTRY("country_id"),
+        CATEGORY("app_category_id"),
+        GENRE("genre_id");
+
+        private String field;
+
+        Group(String field) {
+            this.field = field;
+        }
+
+        public String field() {
+            return field;
+        }
+    }
+
+    private Map<Group, Map<String, String>> maps;
 
 
     public Dictionary(Map<String, String> lineItems, Map<String, String> campaigns, Map<String, String> apps,
                       Map<String, String> creatives, Map<String, String> countries, Map<String, String> categories, Map<String, String> genres) {
-        this.lineItems = Collections.unmodifiableMap(lineItems);
-        this.campaigns = Collections.unmodifiableMap(campaigns);
-        this.apps = Collections.unmodifiableMap(apps);
-        this.creatives = Collections.unmodifiableMap(creatives);
-        this.countries = Collections.unmodifiableMap(countries);
-        this.categories = Collections.unmodifiableMap(categories);
-        this.genres = Collections.unmodifiableMap(genres);
+        maps = new EnumMap<>(Group.class);
+        maps.put(Group.LINE, Collections.unmodifiableMap(lineItems));
+        maps.put(Group.CAMPAIGN, Collections.unmodifiableMap(campaigns));
+        maps.put(Group.APP, Collections.unmodifiableMap(apps));
+        maps.put(Group.CREATIVE, Collections.unmodifiableMap(creatives));
+        maps.put(Group.COUNTRY, Collections.unmodifiableMap(countries));
+        maps.put(Group.CATEGORY, Collections.unmodifiableMap(categories));
+        maps.put(Group.GENRE, Collections.unmodifiableMap(genres));
+        maps = Collections.unmodifiableMap(maps);
     }
 
 
-    public Map<String, String> getLineItems() {
-        return lineItems;
-    }
-
-    public Map<String, String> getCampaigns() {
-        return campaigns;
-    }
-
-    public Map<String, String> getApps() {
-        return apps;
-    }
-
-    public Map<String, String> getCreatives() {
-        return creatives;
-    }
-
-    public Map<String, String> getCountries() {
-        return countries;
-    }
-
-    public Map<String, String> getCategories() {
-        return categories;
-    }
-
-    public Map<String, String> getGenres() {
-        return genres;
+    public Map<Group, Map<String, String>> getMaps() {
+        return maps;
     }
 
 }

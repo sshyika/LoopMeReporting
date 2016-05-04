@@ -10,10 +10,12 @@ public class DruidConnector {
                 .target("http://136.243.171.177:8082/druid/v2")
                 .request()
                 .post(Entity.json("{\n" +
-                        "  \"queryType\": \"groupBy\",\n" +
+                        "  \"queryType\": \"topN\",\n" +
                         "  \"dataSource\": \"apps\",\n" +
+                        "  \"threshold\": 500,\n" +
                         "  \"granularity\": \"all\",\n" +
-                        "  \"dimensions\": [\"campaign_id\"],\n" +
+                        "  \"dimension\": \"app_id\",\n" +
+                        "  \"metric\": \"ad_clicks\",\n" +
                         "  \"aggregations\": [\n" +
                         "    { \"type\": \"longSum\", \"name\": \"ad_clicks\", \"fieldName\": \"ad_clicks\" },\n" +
                         "    { \"type\": \"longSum\", \"name\": \"ad_views\", \"fieldName\": \"ad_views\" },\n" +
@@ -30,9 +32,10 @@ public class DruidConnector {
                         "    { \"type\": \"longSum\", \"name\": \"bid_wins\", \"fieldName\": \"bid_wins\" },\n" +
                         "    { \"type\": \"longSum\", \"name\": \"a_price_cents\", \"fieldName\": \"a_price_cents\" },\n" +
                         "    { \"type\": \"longSum\", \"name\": \"tracking\", \"fieldName\": \"tracking\" },\n" +
-                        "    { \"type\": \"longSum\", \"name\": \"app_price_cents\", \"fieldName\": \"app_price_cents\" }\n" +
+                        "    { \"type\": \"longSum\", \"name\": \"app_price_cents\", \"fieldName\": \"app_price_cents\" },\n" +
+                        "    { \"type\": \"longSum\", \"name\": \"requests\", \"fieldName\": \"requests\" }\n" +
                         "  ],\n" +
-                        "  \"intervals\": [ \"2016-01-01T00:00:00.000/2016-04-01T23:59:59.999\" ]\n" +
+                        "  \"intervals\": [ \"2016-03-01T00:00:00.000/2016-04-01T23:59:59.999\" ]\n" +
                         "}"));
         try {
             return response.readEntity(String.class);

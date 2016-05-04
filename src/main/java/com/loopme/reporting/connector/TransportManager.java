@@ -11,8 +11,6 @@ import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 

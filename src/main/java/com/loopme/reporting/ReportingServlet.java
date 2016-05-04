@@ -17,15 +17,19 @@ public class ReportingServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        //dictionary = DashboardDao.loadDictionary();
+        dictionary = DashboardDao.loadDictionary();
         TransportManager.init();
+    }
+
+    @Override
+    public void destroy() {
+        TransportManager.destroy();
     }
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setHeader("Content-type", "text/plain; charset=UTF-8");
-        resp.setHeader("Access-Control-Allow-Origin", "*");
         String content = "";
         switch (req.getPathInfo()) {
             case "/report" :
@@ -37,7 +41,8 @@ public class ReportingServlet extends HttpServlet {
 
 
     private String getReport(HttpServletRequest req) {
-        return DruidConnector.getReport();
+        String content = DruidConnector.getReport();
+        return Converter.convertTopN(Dictionary.Group.APP, content, dictionary);
     }
 
 
