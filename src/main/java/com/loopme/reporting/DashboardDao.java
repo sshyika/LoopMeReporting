@@ -2,7 +2,9 @@ package com.loopme.reporting;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class DashboardDao {
 
@@ -23,7 +25,7 @@ public class DashboardDao {
         try (Statement stmt = connection.createStatement()) {
             System.out.println("Loading " + query);
             ResultSet rs = stmt.executeQuery(query);
-            Map<String, String> items = new HashMap<>();
+            Map<String, String> items = new LinkedHashMap<>();
             while (rs.next()) {
                 if (keyIsString) {
                     items.put(rs.getString(id), rs.getString(name));
@@ -44,7 +46,7 @@ public class DashboardDao {
                     loadItems(conn, "select id, name from campaigns", "id", "name", false),
                     loadItems(conn, "select id, name from apps", "id", "name", false),
                     loadItems(conn, "select id, name from creatives", "id", "name", false),
-                    loadItems(conn, "select iso2, name from countries", "iso2", "name", true),
+                    loadItems(conn, "select iso2, name from countries order by name asc", "iso2", "name", true),
                     loadItems(conn, "select id, description from content_categories", "id", "description", false),
                     loadItems(conn, "select id, name from genres", "id", "name", false)
             );

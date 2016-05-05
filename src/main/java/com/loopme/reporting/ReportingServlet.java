@@ -83,9 +83,9 @@ public class ReportingServlet extends HttpServlet {
         Dictionary.Group group = Dictionary.Group.parse(groupBy);
         Filter filter = new Filter(lineItem, campaign, app, creative, country, category, genre);
 
-        String content = DruidConnector.search(filter, group.field(), from, TO);
+        String content = DruidConnector.search(filter, group, from, TO);
 
-        return Converter.convertTopN(group, content, dictionary);
+        return Converter.convert(group, content, dictionary);
     }
 
 
@@ -94,7 +94,7 @@ public class ReportingServlet extends HttpServlet {
                 dictionary.getMaps()
                         .get(group)
                         .entrySet().stream()
-                        .limit(100)
+                        .limit(260)
                         .map(e -> String.format("\"%1$s\" : \"%2$s\"", e.getKey(), e.getValue()))
                         .collect(Collectors.joining(","))
 

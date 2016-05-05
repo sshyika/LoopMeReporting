@@ -1,5 +1,6 @@
 package com.loopme.reporting.connector;
 
+import com.loopme.reporting.Dictionary;
 import com.loopme.reporting.Filter;
 
 import javax.ws.rs.client.Entity;
@@ -12,15 +13,22 @@ public class DruidConnector {
     private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
 
-    public static String search(Filter filter, String groupBy, LocalDateTime from, LocalDateTime to) {
+    public static String search(Filter filter, Dictionary.Group groupBy, LocalDateTime from, LocalDateTime to) {
+        String header = "\"queryType\": \"groupBy\",\n" +
+                        "  \"dataSource\": \"apps\",\n" +
+                        "  \"granularity\": \"all\"," +
+                        "  \"dimensions\": [\"" + groupBy.field() + "\"],\n";
+        if (groupBy == Dictionary.Group.DATE) {
+            header = "  \"queryType\": \"timeseries\",\n" +
+                    "  \"dataSource\": \"apps\",\n" +
+                    "  \"granularity\": \"day\",\n" +
+                    "  \"descending\": \"false\",\n";
+        }
         Response response = TransportManager.getClient()
                 .target("http://136.243.171.177:8082/druid/v2")
                 .request()
                 .post(Entity.json("{\n" +
-                        "\"queryType\": \"groupBy\",\n" +
-                        "  \"dataSource\": \"apps\",\n" +
-                        "  \"granularity\": \"all\"," +
-                        "  \"dimensions\": [\"" + groupBy + "\"],\n" +
+                        header +
                         filter.buildQuery() +
                         "  \"aggregations\": [\n" +
                         "    { \"type\": \"longSum\", \"name\": \"ad_clicks\", \"fieldName\": \"ad_clicks\" },\n" +

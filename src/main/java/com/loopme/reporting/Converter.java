@@ -5,19 +5,26 @@ import java.io.StringReader;
 
 public class Converter {
 
-    public static String convertTopN(Dictionary.Group group, String content, Dictionary dict) {
+    public static String convert(Dictionary.Group group, String content, Dictionary dict) {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         JsonReader reader = Json.createReader(new StringReader(content));
         JsonArray results = reader.readArray();
 
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for (JsonObject result : results.getValuesAs(JsonObject.class)) {
-            result = result.getJsonObject("event");
             String groupValue = "";
-            if (result.get(group.field()).getValueType() != JsonValue.ValueType.NULL) {
-                groupValue = dict.getMaps().get(group).get(result.getString(group.field()));
+            if (group == Dictionary.Group.DATE) {
+                groupValue = result.getString("timestamp");
+                groupValue = groupValue.substring(0, groupValue.indexOf('T'));
+                result = result.getJsonObject("result");
+            } else {
+                result = result.getJsonObject("event");
+                if (result.get(group.field()).getValueType() != JsonValue.ValueType.NULL) {
+                    groupValue = dict.getMaps().get(group).get(result.getString(group.field()));
+                }
+                groupValue = groupValue == null ? "" : groupValue;
             }
-            groupValue = groupValue == null ? "" : groupValue;
+
             arrayBuilder.add(
                 Json.createObjectBuilder()
                 .add("ad_clicks", result.getJsonNumber("ad_clicks"))

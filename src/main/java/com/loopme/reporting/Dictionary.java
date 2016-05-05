@@ -7,6 +7,7 @@ import java.util.Map;
 public class Dictionary {
 
     public static enum Group {
+        DATE("date"),
         LINE("line_item_id"),
         CAMPAIGN("campaign_id"),
         APP("app_id"),
@@ -31,7 +32,7 @@ public class Dictionary {
                     return group;
                 }
             }
-            return Group.CAMPAIGN;
+            return Group.DATE;
         }
     }
 
