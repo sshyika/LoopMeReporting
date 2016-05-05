@@ -8,10 +8,11 @@ public class Converter {
     public static String convertTopN(Dictionary.Group group, String content, Dictionary dict) {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         JsonReader reader = Json.createReader(new StringReader(content));
-        JsonArray results = reader.readArray().getJsonObject(0).getJsonArray("result");
+        JsonArray results = reader.readArray();
 
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for (JsonObject result : results.getValuesAs(JsonObject.class)) {
+            result = result.getJsonObject("event");
             String groupValue = "";
             if (result.get(group.field()).getValueType() != JsonValue.ValueType.NULL) {
                 groupValue = dict.getMaps().get(group).get(result.getString(group.field()));

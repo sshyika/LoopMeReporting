@@ -25,6 +25,7 @@
 			function showReport(url) {
 				return $('#table_id').DataTable({
 					searching: false,
+					processing: true,
 					ajax: {
 						url: url,
 						dataSrc: 'data'
@@ -63,13 +64,28 @@
 			}
 
 			function refreshTable() {
-				dataTable.ajax.url("/api/report?" + "groupBy=" + document.getElementById("group_by").value);
-				dataTable.ajax.reload(null, false);
+				dataTable.ajax.url("/api/report?"
+						+ "groupBy=" + document.getElementById("group_by").value
+						+ "&period=" + document.getElementById("period").value
+						+ "&app=" + document.getElementById("app").value
+						+ "&campaign=" + document.getElementById("campaign").value
+						+ "&line_item=" + document.getElementById("line_item").value
+						+ "&creative=" + document.getElementById("creative").value
+						+ "&country=" + document.getElementById("country").value
+						+ "&category=" + document.getElementById("category").value
+						+ "&genre=" + document.getElementById("genre").value
+				).load();
 			}
 
 			$(document).ready(function() {
 				dataTable = showReport("/api/report");
+				loadItems("app", "/api/dict/apps");
+				loadItems("campaign", "/api/dict/campaigns");
 				loadItems("line_item", "/api/dict/lineitems");
+				loadItems("creative", "/api/dict/creatives");
+				loadItems("country", "/api/dict/countries");
+				loadItems("category", "/api/dict/categories");
+				loadItems("genre", "/api/dict/genres");
 			});
 		</script>
 	</head>
@@ -77,21 +93,91 @@
 
 		<br/><br/>
 
-		Line Item:
-		<select id="line_item" onchange="alert('asd');">
-			<option value="">--</option>
-		</select>
-
-		Group By:
-		<select id="group_by" onchange="refreshTable();">
-			<option value="line_item_id">Line Item</option>
-			<option value="campaign_id">Campaign</option>
-			<option value="app_id">App</option>
-			<option value="creative_id">Creative</option>
-			<option value="country_id">Country</option>
-			<option value="app_category_id">App Category</option>
-			<option value="genre_id">Genre</option>
-		</select>
+		<table>
+			<tr>
+				<td style="vertical-align: top; padding: 0 30px 0 30px;">
+					<table>
+						<tr>
+							<td>App:</td>
+							<td>
+								<select id="app" onchange="refreshTable();" style="width: 100%">
+									<option value="">--</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>Campaign:</td>
+							<td>
+								<select id="campaign" onchange="refreshTable();" style="width: 100%">
+									<option value="">--</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>Line Item:</td>
+							<td>
+								<select id="line_item" onchange="refreshTable();" style="width: 100%">
+									<option value="">--</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>Creative:</td>
+							<td>
+								<select id="creative" onchange="refreshTable();" style="width: 100%">
+									<option value="">--</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>Country:</td>
+							<td>
+								<select id="country" onchange="refreshTable();" style="width: 100%">
+									<option value="">--</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>Category:</td>
+							<td>
+								<select id="category" onchange="refreshTable();" style="width: 100%">
+									<option value="">--</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>Genre:</td>
+							<td>
+								<select id="genre" onchange="refreshTable();" style="width: 100%">
+									<option value="">--</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td style="vertical-align: top; padding: 0 30px 0 30px;">
+					Group By:
+					<select id="group_by" onchange="refreshTable();">
+						<option value="line_item_id">Line Item</option>
+						<option value="campaign_id">Campaign</option>
+						<option value="app_id">App</option>
+						<option value="creative_id">Creative</option>
+						<option value="country_id">Country</option>
+						<option value="app_category_id">App Category</option>
+						<option value="genre_id">Genre</option>
+					</select>
+				</td>
+				<td style="vertical-align: top; padding: 0 30px 0 30px;">
+					Period:
+					<select id="period" onchange="refreshTable();">
+						<option value="7">7 Days</option>
+						<option value="30">30 Days</option>
+						<option value="60">60 Days</option>
+						<option value="90">90 Days</option>
+					</select>
+				</td>
+			</tr>
+		</table>
 
 		<br/><br/>
 		<hr/>

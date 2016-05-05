@@ -1,21 +1,27 @@
 package com.loopme.reporting.connector;
 
+import com.loopme.reporting.Filter;
+
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DruidConnector {
 
-    public static String getReport(String groupBy) {
+    private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+
+    public static String search(Filter filter, String groupBy, LocalDateTime from, LocalDateTime to) {
         Response response = TransportManager.getClient()
                 .target("http://136.243.171.177:8082/druid/v2")
                 .request()
                 .post(Entity.json("{\n" +
-                        "  \"queryType\": \"topN\",\n" +
+                        "\"queryType\": \"groupBy\",\n" +
                         "  \"dataSource\": \"apps\",\n" +
-                        "  \"threshold\": 50000,\n" +
-                        "  \"granularity\": \"all\",\n" +
-                        "  \"dimension\": \"" + groupBy + "\",\n" +
-                        "  \"metric\": \"ad_clicks\",\n" +
+                        "  \"granularity\": \"all\"," +
+                        "  \"dimensions\": [\"" + groupBy + "\"],\n" +
+                        filter.buildQuery() +
                         "  \"aggregations\": [\n" +
                         "    { \"type\": \"longSum\", \"name\": \"ad_clicks\", \"fieldName\": \"ad_clicks\" },\n" +
                         "    { \"type\": \"longSum\", \"name\": \"ad_views\", \"fieldName\": \"ad_views\" },\n" +
@@ -35,7 +41,7 @@ public class DruidConnector {
                         "    { \"type\": \"longSum\", \"name\": \"app_price_cents\", \"fieldName\": \"app_price_cents\" },\n" +
                         "    { \"type\": \"longSum\", \"name\": \"requests\", \"fieldName\": \"requests\" }\n" +
                         "  ],\n" +
-                        "  \"intervals\": [ \"2016-03-01T00:00:00.000/2016-04-01T23:59:59.999\" ]\n" +
+                        "  \"intervals\": [ \"" + from.format(format) + "/" + to.format(format) + "\" ]\n" +
                         "}"));
         try {
             return response.readEntity(String.class);
