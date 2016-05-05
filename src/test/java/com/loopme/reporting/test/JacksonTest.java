@@ -12,7 +12,7 @@ public class JacksonTest {
 
 
 
-    @Test
+    //@Test
     public void test() throws Exception {
         JsonReader reader = Json.createReader(load("topN.json"));
         JsonArray results = reader.readArray()

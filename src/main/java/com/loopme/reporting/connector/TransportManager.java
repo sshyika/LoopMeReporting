@@ -27,7 +27,7 @@ public class TransportManager {
       // setup http connections pooling for REST client
       connectionManager = new PoolingHttpClientConnectionManager();
       ((PoolingHttpClientConnectionManager)connectionManager).setMaxTotal(Integer.MAX_VALUE);
-      ((PoolingHttpClientConnectionManager)connectionManager).setDefaultMaxPerRoute(20);
+      ((PoolingHttpClientConnectionManager)connectionManager).setDefaultMaxPerRoute(30);
       clientConfig.property(ApacheClientProperties.CONNECTION_MANAGER, connectionManager);
 
       clientConfig.connectorProvider(new ApacheConnectorProvider());
